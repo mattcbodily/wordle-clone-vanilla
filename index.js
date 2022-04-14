@@ -41,10 +41,16 @@ const generateTiles = () => {
       tile.setAttribute('class', 'tile')
       tile.setAttribute('id', `row-${i}-tile-${j}`)
       tile.addEventListener('click', e => {
-        if (i === currentGuess) {
+        if (i === currentGuess - 1) {
+          document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.remove('active-tile')
           activeTile = j
+          tile.classList.add('active-tile')
         }
       })
+
+      if (i === 0 && j === 0) {
+        tile.classList.add('active-tile')
+      }
 
       row.appendChild(tile)
     }
@@ -62,17 +68,29 @@ const buttons = document.getElementsByClassName('keyboard-key')
 const tiles = document.getElementsByClassName('tile')
 
 const addLetter = val => {
-  if (guesses[`guess${currentGuess}`].length === 5) return
+  if (guesses[`guess${currentGuess}`].join('').length === 5) return
 
-  document.getElementById(`row-${currentGuess - 1}-tile-${guesses[`guess${currentGuess}`].length}`).innerText = val
-  guesses[`guess${currentGuess}`].push(val)
+  document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).innerText = val
+  guesses[`guess${currentGuess}`][activeTile] = val
+
+  if (activeTile !== 4) {
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.remove('active-tile')
+    ++activeTile
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.add('active-tile')
+  }
 }
 
 const deleteLetter = () => {
   if (guesses[`guess${currentGuess}`].length === 0) return
 
-  document.getElementById(`row-${currentGuess - 1}-tile-${guesses[`guess${currentGuess}`].length - 1}`).innerText = ''
-  guesses[`guess${currentGuess}`].pop()
+  document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).innerText = ''
+  guesses[`guess${currentGuess}`].splice(activeTile, 1)
+
+  if (activeTile !== 0) {
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.remove('active-tile')
+    --activeTile
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.add('active-tile')
+  }
 }
 
 const submitGuess = () => {
@@ -80,6 +98,7 @@ const submitGuess = () => {
 
   for (let i = 0; i < 5; i++) {
     const keyboardKey = document.querySelector(`button[value=${guesses[`guess${currentGuess}`][i]}]`)
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.remove('active-tile')
 
     if (guesses[`guess${currentGuess}`][i] === splitTargetWord[i]) {
       document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('green-tile')
@@ -100,7 +119,9 @@ const submitGuess = () => {
   if (currentGuess === 6) {
     return window.alert('You lose!')
   } else {
-    currentGuess++
+    ++currentGuess
+    activeTile = 0
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.add('active-tile')
   }
 }
 
@@ -117,11 +138,23 @@ for (let i = 0; i < buttons.length; i++) {
 }
 
 window.addEventListener('keydown', e => {
-  if (e.key !== 'Enter' && e.key !== 'Backspace') {
+  if (e.key !== 'Enter' && e.key !== 'Backspace' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') {
     addLetter(e.key.toUpperCase())
   } else if (e.key === 'Backspace') {
     deleteLetter()
   } else if (e.key === 'Enter') {
     submitGuess()
+  } else if (e.key === 'ArrowLeft') {
+    if (activeTile === 0) return
+
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.remove('active-tile')
+    activeTile -= 1
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.add('active-tile')
+  } else if (e.key === 'ArrowRight') {
+    if (activeTile === 4) return
+
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.remove('active-tile')
+    activeTile += 1
+    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.add('active-tile')
   }
 })

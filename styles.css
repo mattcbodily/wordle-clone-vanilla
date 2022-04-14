@@ -29,6 +29,10 @@ body {
   height: 60px;
 }
 
+.active-tile {
+  border: 1px solid yellow;
+}
+
 .gray-tile {
   background: darkslategray;
 }
