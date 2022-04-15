@@ -1,7 +1,7 @@
 body {
-  background: black;
+  background: #232B2F;
   box-sizing: border-box;
-  color: white;
+  color: #EFF1F3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,16 +10,22 @@ body {
   padding: 16px;
 }
 
+#header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .tile-grid-row {
   display: grid;
   grid-template-columns: repeat(5, 60px);
-  gap: 4px;
-  margin: 2px 0px;
+  gap: 3px;
+  margin: 4px 0px;
 }
 
 .tile {
-  border: 1px solid white;
-  border-radius: 2px;
+  border: 2px solid #A1B1BA;
+  border-radius: 3px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -30,19 +36,29 @@ body {
 }
 
 .active-tile {
-  border: 1px solid yellow;
+  border: 3px solid #EFF1F3;
 }
 
 .gray-tile {
-  background: darkslategray;
+  background: #3D4B52;
+  border: none;
 }
 
 .green-tile {
-  background: green;
+  background: #02C39A;
+  border: none;
 }
 
 .yellow-tile {
-  background: goldenrod;
+  background: #F7CB15;
+  border: none;
+}
+
+.animated-tile {
+  animation-name: lettertyped;
+  animation-duration: 50ms;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
 }
 
 .keyboard-row {
@@ -51,11 +67,21 @@ body {
 }
 
 .keyboard-key {
-  background: gray;
+  background: #5E747F;
   border: none;
   border-radius: 4px;
-  color: white;
+  color: #EFF1F3;
   height: 60px;
   width: 45px;
   margin: 2px;
+}
+
+@keyframes lettertyped {
+  from {
+    transform: scale(1)
+  }
+
+  to {
+    transform: scale(1.1)
+  }
 }
