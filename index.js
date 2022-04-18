@@ -58,7 +58,7 @@ const generateTiles = () => {
       tile.addEventListener(
         "animationend",
         () => {
-          tile.classList.remove("animated-tile")
+          tile.classList.remove("animated-tile", "flip")
         }
       )
 
@@ -118,32 +118,43 @@ const deleteLetter = () => {
 const submitGuess = () => {
   if (guesses[`guess${currentGuess}`].length !== 5 || !dictionary.includes(guesses[`guess${currentGuess}`].join('').toLowerCase())) return
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     const keyboardKey = document.querySelector(`button[value=${guesses[`guess${currentGuess}`][i]}]`)
     document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.remove('active-tile')
+    
+    const flipTile = setTimeout(
+      () => {
+        if (i !== 5) document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('flip')
 
-    if (guesses[`guess${currentGuess}`][i] === splitTargetWord[i]) {
-      document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('green-tile')
-      keyboardKey.style = 'background: #02C39A;'
-    } else if (splitTargetWord.includes(guesses[`guess${currentGuess}`][i]) && guesses[`guess${currentGuess}`][i] !== splitTargetWord[i]) {
-      document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('yellow-tile')
-      keyboardKey.style = 'background: #F7CB15;'
-    } else {
-      document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('gray-tile')
-      keyboardKey.style = 'background: #3D4B52;'
-    }
-  }
+        if (i === 5) {
+          if (guesses[`guess${currentGuess}`].join('') === targetWord.toUpperCase()) {
+            window.alert('You win!')
+          }
+        
+          if (currentGuess === 6) {
+            window.alert('You lose!')
+          } else {
+            ++currentGuess
+            activeTile = 0
+            document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.add('active-tile')
+          }
+          
+          return clearTimeout(flipTile)
+        }
 
-  if (guesses[`guess${currentGuess}`].join('') === targetWord.toUpperCase()) {
-    return window.alert('You win!')
-  }
-
-  if (currentGuess === 6) {
-    return window.alert('You lose!')
-  } else {
-    ++currentGuess
-    activeTile = 0
-    document.getElementById(`row-${currentGuess - 1}-tile-${activeTile}`).classList.add('active-tile')
+        if (guesses[`guess${currentGuess}`][i] === splitTargetWord[i]) {
+          document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('green-tile')
+          keyboardKey.style = 'background: #02C39A;'
+        } else if (splitTargetWord.includes(guesses[`guess${currentGuess}`][i]) && guesses[`guess${currentGuess}`][i] !== splitTargetWord[i]) {
+          document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('yellow-tile')
+          keyboardKey.style = 'background: #F7CB15;'
+        } else {
+          document.getElementById(`row-${currentGuess - 1}-tile-${i}`).classList.add('gray-tile')
+          keyboardKey.style = 'background: #3D4B52;'
+        }
+      },
+      500 * (i + 1)
+    )
   }
 }
 

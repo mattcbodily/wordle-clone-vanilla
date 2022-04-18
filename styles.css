@@ -61,6 +61,13 @@ body {
   animation-timing-function: linear;
 }
 
+.flip {
+  animation-name: fliptiles;
+  animation-duration: 500ms;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
+}
+
 .keyboard-row {
   display: flex;
   justify-content: center;
@@ -74,6 +81,20 @@ body {
   height: 60px;
   width: 45px;
   margin: 2px;
+}
+
+@keyframes fliptiles {
+  0% {
+    transform: scaleY(1)
+  }
+
+  50% {
+    transform: scaleY(0)
+  }
+
+  100% {
+    transform: scaleY(1)
+  }
 }
 
 @keyframes lettertyped {
